@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Gift | Megha Tikedar</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --pink: #ff80bf;
+            --dark-pink: #d63384;
+            --bg: #fff5f8;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 1s ease;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">✨</text></svg>'), auto;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .room-dark {
+            background: #121212 !important;
+        }
+
+        /* Step Containers */
+        .step {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.8s ease forwards;
+            width: 90%;
+            max-width: 400px;
+            z-index: 10;
+            max-height: 95vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 10px 5px;
+        }
+        
+        .step::-webkit-scrollbar { width: 5px; }
+        .step::-webkit-scrollbar-thumb { background: rgba(255, 128, 191, 0.8); border-radius: 10px; }
+
+        .active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            margin: 10px 0;
+            background: linear-gradient(45deg, #ff4d94, #9b59b6, #ff80bf, #ff9f43);
+            background-size: 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGradient 5s ease infinite;
+        }
+
+        @keyframes textGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dark-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Interactive Buttons */
+        .btn {
+            background: linear-gradient(135deg, #ff4d94, #9b59b6);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+            margin: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">💖</text></svg>'), pointer;
+            animation: btnPulse 2s infinite;
+        }
+
+        @keyframes btnPulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(155, 89, 182, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4); }
+        }
+
+        .btn:hover {
+            animation: none;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.8);
+        }
+
+        .btn-yellow {
+            background: linear-gradient(135deg, #ffd32a, #ff9f43);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(255, 159, 67, 0.4);
+        }
+
+        /* Decorations */
+        .light-strip {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #ff0, #f0f, #0ff, #ff0);
+            background-size: 300%;
+            animation: move 4s linear infinite;
+            display: none;
+        }
+
+        @keyframes move {
+            0% {
+                background-position: 0%;
+            }
+
+            100% {
+                background-position: 300%;
+            }
+        }
+
+        /* Glowing Butterflies */
+        .glow-butterfly {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.9;
+            /* Colors assigned dynamically in JS */
+        }
+
+        @keyframes flutterPath1 {
+            0% {
+                top: 110vh;
+                left: -10vw;
+                transform: scale(1) rotate(15deg);
+            }
+
+            25% {
+                top: 70vh;
+                left: 30vw;
+                transform: scale(1.2) rotate(-10deg);
+            }
+
+            50% {
+                top: 40vh;
+                left: 70vw;
+                transform: scale(0.9) rotate(20deg);
+            }
+
+            75% {
+                top: 10vh;
+                left: 40vw;
+                transform: scale(1.1) rotate(-15deg);
+            }
+
+            100% {
+                top: -20vh;
+                left: 110vw;
+                transform: scale(1) rotate(15deg);
+            }
+        }
+
+        @keyframes flutterPath2 {
+            0% {
+                top: 110vh;
+                left: 110vw;
+                transform: scale(1) rotate(-15deg);
+            }
+
+            25% {
+                top: 80vh;
+                left: 70vw;
+                transform: scale(1.2) rotate(10deg);
+            }
+
+            50% {
+                top: 50vh;
+                left: 20vw;
+                transform: scale(0.9) rotate(-20deg);
+            }
+
+            75% {
+                top: 20vh;
+                left: 50vw;
+                transform: scale(1.1) rotate(15deg);
+            }
+
+            100% {
+                top: -20vh;
+                left: -10vw;
+                transform: scale(1) rotate(-15deg);
+            }
+        }
+
+        @keyframes flap {
+
+            0%,
+            100% {
+                transform: rotateY(0deg);
+            }
+
+            50% {
+                transform: rotateY(60deg);
+            }
+        }
+
+        .bf-inner {
+            display: inline-block;
+            animation: flap 0.3s infinite alternate ease-in-out;
+        }
+
+        @keyframes bounceSlide {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* Moving Photo Slider */
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 500%;
+            /* 5 slides */
+            height: 100%;
+            display: flex;
+            animation: slideGallery 20s infinite cubic-bezier(0.8, 0, 0.2, 1);
+            z-index: 0;
+        }
+
+        .slide {
+            width: 20%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes slideGallery {
+
+            0%,
+            15% {
+                transform: translateX(0);
+            }
+
+            20%,
+            35% {
+                transform: translateX(-20%);
+            }
+
+            40%,
+            55% {
+                transform: translateX(-40%);
+            }
+
+            60%,
+            75% {
+                transform: translateX(-60%);
+            }
+
+            80%,
+            95% {
+                transform: translateX(-80%);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        /* THE PHOTO BOX */
+        .magic-box {
+            position: relative;
+            width: 100%;
+            height: 52vh;
+            min-height: 350px;
+            max-height: 500px;
+            border-radius: 25px;
+            border: 8px solid white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(255, 128, 191, 0.8);
+            margin: 15px 0;
+            overflow: hidden;
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform;
+            background: #fff;
+            animation: pulseGlow 3s infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 128, 191, 0.5); }
+            100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 45px rgba(255, 105, 180, 0.9); }
+        }
+
+        /* UNLIMITED SCROLLING QUOTES */
+        .quote-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 20%, rgba(255, 255, 255, 0.8) 80%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            pointer-events: none;
+            z-index: 1;
+            /* Let hover pass through */
+        }
+
+        .scroll-wrap {
+            animation: scrollUp 40s linear infinite;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        @keyframes scrollUp {
+            0% {
+                transform: translateY(100%);
+            }
+
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        .q-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 4px solid var(--pink);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50%;
+            animation: flyUp 6s ease-in forwards;
+            z-index: 5;
+        }
+
+        @keyframes flyUp {
+            to {
+                transform: translateY(-120vh) rotate(30deg);
+            }
+        }
+
+        /* Custom Scrollbar */
+        .scroll-msg::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scroll-msg::-webkit-scrollbar-track {
+            background: #ffe6f0;
+            border-radius: 10px;
+        }
+
+        .scroll-msg::-webkit-scrollbar-thumb {
+            background: var(--pink);
+            border-radius: 10px;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        /* Final Page Gallery */
+        .final-gallery {
+            position: relative;
+            width: 100%;
+            height: 230px;
+            margin: 10px 0 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .polaroid {
+            position: absolute;
+            width: 130px;
+            height: 150px;
+            object-fit: cover;
+            border: 6px solid white;
+            border-bottom-width: 26px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .polaroid.p1 {
+            transform: rotate(-18deg) translateX(-85px);
+            z-index: 1;
+        }
+
+        .polaroid.p2 {
+            transform: rotate(4deg) translateY(-15px);
+            z-index: 3;
+            width: 140px;
+            height: 160px;
+            border-bottom-width: 28px;
+        }
+
+        .polaroid.p3 {
+            transform: rotate(18deg) translateX(85px);
+            z-index: 2;
+        }
+
+        .polaroid:hover {
+            z-index: 10 !important;
+            transform: scale(1.15) translateY(-10px) rotate(0deg) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Fullscreen Animated Love Background */
+        .bg-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #ff80bf, #b380ff, #ff99cc, #ffb380);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        .bg-video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif') center/cover;
+            opacity: 0.15;
+            mix-blend-mode: overlay;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            animation: floatUp 15s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(110vh) scale(0.5);
+                opacity: 0;
+            }
+
+            5% {
+                opacity: 0.8;
+            }
+
+            95% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Game Question Boxes */
+        .q-box {
+            display: none;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--pink);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: left;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .active-q {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .q-box label {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .q-box textarea {
+            width: 100%;
+            height: 100px;
+            border-radius: 10px;
+            border: 1px solid #ffb3d9;
+            padding: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            resize: none;
+            outline: none;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .q-box textarea:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 8px rgba(255, 105, 180, 0.4);
+        }
+    </style>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body id="bodyTag">
+
+    <!-- Entire Screen Love Animation Video Background -->
+    <div class="bg-video-container" id="bgVideo">
+        <div class="bg-video-overlay"></div>
+    </div>
+
+    <!-- Replace 'song.mp3.mp3' with the correct name of your audio file -->
+    <audio id="bgMusic" loop>
+        <source src="song.mp3.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="light-strip" id="lights"></div>
+
+    <div class="step active" id="step0">
+        <h1>Welcome! 🔒</h1>
+        <p>Please enter the secret password to continue...</p>
+        <input type="password" id="passwordInput" placeholder="Enter password"
+            style="padding: 10px; border-radius: 20px; border: 2px solid var(--pink); margin: 10px; width: 80%; text-align: center; font-family: 'Poppins', sans-serif; outline: none;">
+        <br>
+        <button class="btn" onclick="checkPassword()">🔓 Unlock</button>
+        <p id="errorMsg" style="color: red; display: none; margin-top: 5px; font-weight: 600;">Incorrect password!</p>
+    </div>
+
+    <div class="step" id="step1">
+        <h1>Happy Birthday Megha! 🎂</h1>
+        <div style="position: relative; display: inline-block; margin: 10px 0;">
+            <img src="https://media.tenor.com/vH9hN6hYp78AAAAi/happy-birthday-anime.gif" alt="Anime Cake"
+                style="width: 220px; border-radius: 15px; box-shadow: 0 4px 15px rgba(255,105,180,0.4);">
+            <div
+                style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #fff; text-shadow: 2px 2px 5px #ff4d94, 0 0 10px #ff4d94, -1px -1px 1px #d63384, 1px -1px 1px #d63384, -1px 1px 1px #d63384, 1px 1px 1px #d63384; font-weight: bold; transform: rotate(-5deg) translateY(-10px);">
+                Megha 💕
+            </div>
+        </div>
+        <p>Ready for your surprise? Something magical is about to unfold...</p>
+        <button class="btn" onclick="goTo(1, 2); setDark(true)">✨ Let's Celebrate</button>
+    </div>
+
+    <div class="step" id="step2">
+        <h1 class="dark-text">It's Your Special Day! 🎉</h1>
+        <p style="color: #aaa;">Click the button to decorate</p>
+        <button class="btn btn-yellow" onclick="turnOnLights()">💡 Turn On the Lights</button>
+    </div>
+
+    <div class="step" id="step3">
+        <h1>Music makes it better...</h1>
+        <img src="https://media.tenor.com/Yw9Ew3v1PcwAAAAi/teddy-bear-cute.gif" alt="Teddy Bear"
+            style="width: 150px; margin: 10px 0;">
+        <br>
+        <button class="btn" onclick="playMusic(); goTo(3, 4)">🎵 Play Music & Next</button>
+    </div>
+
+    <div class="step" id="step4">
+        <h1>Make a Wish! 🎂</h1>
+        <p>Tap the candles to blow them out...</p>
+        <div style="font-size: 70px; cursor: pointer; user-select: none; margin: 20px 0; transition: transform 0.3s;"
+            id="candles" onclick="blowCandles()">🕯️🕯️🕯️</div>
+        <button class="btn" id="balloonBtn" style="display: none;"
+            onclick="releaseBalloons(); setTimeout(()=>goTo(4, 5), 2500)">🎈 Fly the Balloons</button>
+    </div>
+
+    <div class="step" id="step5" style="width: 95%;">
+        <h1>For Madam Jiii 🌹</h1>
+        <div class="magic-box" id="magicBoxEl">
+            <div class="slider">
+                <img src="megha.jpg (2).jpg" class="slide">
+                <img src="megha.jpg (3).jpg" class="slide">
+                <img src="megha.jpg (4).jpg" class="slide">
+                <img src="megha.jpg (5).jpg" class="slide">
+                <img src="megha.jpg (6).jpg" class="slide">
+            </div>
+            <div class="quote-overlay">
+                <div class="scroll-wrap" id="quoteList"></div>
+            </div>
+        </div>
+        
+        <div style="font-size: 0.85rem; color: var(--dark-pink); font-weight: 700; animation: bounceSlide 1.5s infinite; margin-top: -5px; margin-bottom: 5px;">
+            👇 Swipe up to see more! 👇
+        </div>
+
+        <div class="glass-box"
+            style="padding: 15px; border-radius: 15px; font-size: 0.85rem; margin-bottom: 10px; color: #333; text-align: center;">
+            <b style="color: var(--dark-pink); font-size: 1rem;">A Message From My Heart:</b><br><br>
+            "Until I Found You," I never knew what true happiness felt like. Have a wonderful birthday, Megha! 💖
+        </div>
+        <button class="btn" onclick="startTypewriter(); goTo(5, 6)">✉️ More from me</button>
+    </div>
+
+    <div class="step" id="step6" style="max-height: 95vh; width: 95%;">
+        <h1>For My Madam Jiii 💖</h1>
+
+        <div class="final-gallery">
+            <img src="megha.jpg (8).jpg" class="polaroid p1">
+            <img src="megha.jpg (9).jpg" class="polaroid p2">
+            <img src="megha.jpg (10).jpg" class="polaroid p3">
+        </div>
+
+        <div class="scroll-msg glass-box" id="typewriterText"
+            style="padding: 15px 20px; border-radius: 15px; text-align: left; max-height: 48vh; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; color: #111; border: 2px solid var(--pink); font-weight: 500;">
+            <!-- Text gets written here via JavaScript -->
+        </div>
+        <button class="btn" id="finishBtn" style="margin-top: 15px; display: none;" onclick="goTo(6, 7)">🎮 Play a
+            Secret Game!</button>
+    </div>
+
+    <div class="step" id="step7" style="width: 95%;">
+        <h1 style="font-size: 2rem;">Honesty Time 😏</h1>
+        <p>Answer these to claim your prize 🎁</p>
+
+        <form id="gameForm">
+            <!-- WhatsApp Logic -> No FormSubmit backend needed -->
+
+            <div class="q-box active-q" id="q1">
+                <label>Birthday girl 👑, what is your first wish today? I’m ready to make it happen 😊</label>
+                <textarea name="Wish" placeholder="Type your answer here..."></textarea>
+                <button type="button" class="btn btn-yellow" onclick="nextQ(1)">Next ➡️</button>
+            </div>
+
+            <div class="q-box" id="q2">
+                <label>Can I officially take permission to make you smile the whole day? 😄💕</label>
+                <textarea name="Permission" placeholder="Type your answer here..."></textarea>
+                <button type="button" class="btn btn-yellow" onclick="nextQ(2)">Next ➡️</button>
+            </div>
+
+            <div class="q-box" id="q3">
+                <label>What special thing will make your birthday perfect this year? Tell me, I’ll try my best
+                    ❤️</label>
+                <textarea name="PerfectBirthday" placeholder="Type your answer here..."></textarea>
+                <button type="button" class="btn btn-yellow" onclick="nextQ(3)">Next ➡️</button>
+            </div>
+
+            <div class="q-box" id="q4">
+                <label>Be honest… how are you getting more beautiful every year? This is not fair 😤😂</label>
+                <textarea name="BeautySecret" placeholder="Type your answer here..."></textarea>
+                <button type="button" class="btn btn-yellow" onclick="nextQ(4)">Next ➡️</button>
+            </div>
+
+            <div class="q-box" id="q5">
+                <label>So madam, what gift will make you happiest today? Give me one clue 😏🎁</label>
+                <textarea name="GiftClue" placeholder="Type your answer here..."></textarea>
+                <button type="submit" class="btn">💌 Send Answers Secretly</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const pwd = document.getElementById('passwordInput').value.toLowerCase().trim();
+            if (pwd === 'chaos') {
+                // Confetti Explosion
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 150,
+                        spread: 80,
+                        origin: { y: 0.6 },
+                        colors: ['#ff80bf', '#d63384', '#ffd32a', '#ffffff']
+                    });
+                }
+                document.getElementById('step0').classList.remove('active');
+                document.getElementById('step1').classList.add('active');
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        function blowCandles() {
+            const candles = document.getElementById('candles');
+            candles.style.transform = 'scale(1.2)';
+            candles.innerText = '💨 🎂 💨';
+
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 100,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ['#ffd32a', '#ff9f43'] // Fire colors
+                });
+            }
+
+            setTimeout(() => {
+                candles.style.transform = 'scale(1)';
+                candles.innerText = '🥳 🎂 🎉';
+                document.getElementById('balloonBtn').style.display = 'inline-block';
+                candles.style.pointerEvents = 'none'; // Prevent clicking again
+            }, 800);
+        }
+
+        // 3D Hover effect for Magic Box
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generate Fullscreen Background Video Hearts effect
+            const bgContainer = document.getElementById('bgVideo');
+            if (bgContainer) {
+                for (let i = 0; i < 30; i++) {
+                    let h = document.createElement('div');
+                    h.className = 'floating-heart';
+                    h.innerHTML = ['💖', '✨', '💜', '💛', '🌸', '🦋'][Math.floor(Math.random() * 6)];
+                    h.style.left = Math.random() * 100 + 'vw';
+                    h.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    h.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                    h.style.animationDelay = '-' + (Math.random() * 10) + 's';
+                    bgContainer.appendChild(h);
+                }
+            }
+
+            // Generate Glowing Butterflies
+            const butterflyShadows = [
+                '0 0 15px #ff4d94, 0 0 30px #d63384, 0 0 45px #ff80bf', // Pink
+                '0 0 15px #9b59b6, 0 0 30px #8e44ad, 0 0 45px #c39bd3', // Purple
+                '0 0 15px #3498db, 0 0 30px #2980b9, 0 0 45px #85c1e9', // Blue
+                '0 0 15px #f1c40f, 0 0 30px #f39c12, 0 0 45px #f7dc6f'  // Gold
+            ];
+            for (let i = 0; i < 8; i++) {
+                let bfWrapper = document.createElement('div');
+                bfWrapper.className = 'glow-butterfly';
+                bfWrapper.style.fontSize = (Math.random() * 30 + 40) + 'px';
+                bfWrapper.style.animation = `flutterPath${i % 2 + 1} ${Math.random() * 10 + 15}s linear infinite`;
+                bfWrapper.style.animationDelay = `-${Math.random() * 15}s`;
+                // Add unique color per butterfly
+                bfWrapper.style.textShadow = butterflyShadows[i % 4];
+                bfWrapper.style.filter = 'drop-shadow(0px 0px 5px rgba(255,255,255,0.7))';
+
+                let bfInner = document.createElement('div');
+                bfInner.className = 'bf-inner';
+                bfInner.innerHTML = '🦋';
+
+                bfWrapper.appendChild(bfInner);
+                document.body.appendChild(bfWrapper);
+            }
+
+            const box = document.getElementById('magicBoxEl');
+            if (box) {
+                box.addEventListener('mousemove', (e) => {
+                    const rect = box.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -12;
+                    const rotateY = ((x - centerX) / centerX) * 12;
+                    box.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                box.addEventListener('mouseleave', () => {
+                    box.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+                    box.style.transition = 'transform 0.5s ease-out';
+                });
+                box.addEventListener('mouseenter', () => {
+                    box.style.transition = 'none';
+                });
+            }
+
+            // Format WhatsApp Message directly
+            const gameForm = document.getElementById('gameForm');
+            if (gameForm) {
+                gameForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    
+                    const fd = new FormData(gameForm);
+                    
+                    if (!fd.get('GiftClue').trim()) {
+                        alert("Please write something Madam jiii! 😏");
+                        return;
+                    }
+
+                    let txt = "Here are my secret answers for your birthday game! 🎉\n\n";
+                    txt += "1. First Wish:\n" + fd.get('Wish') + "\n\n";
+                    txt += "2. Permission to make you smile:\n" + fd.get('Permission') + "\n\n";
+                    txt += "3. Perfect Birthday:\n" + fd.get('PerfectBirthday') + "\n\n";
+                    txt += "4. Beauty Secret:\n" + fd.get('BeautySecret') + "\n\n";
+                    txt += "5. Gift Clue:\n" + fd.get('GiftClue') + "\n\n";
+                    
+                    // Send directly to Gowtham Pandian's WhatsApp
+                    const waLink = "https://wa.me/916385131550?text=" + encodeURIComponent(txt);
+                    
+                    window.location.href = waLink;
+
+                    gameForm.innerHTML = "<h2 style='text-align:center; color: var(--dark-pink); line-height: 1.5;'>💖 Almost there! 😏💖</h2><br><p style='color:#333; text-align: center; font-size: 0.95rem; line-height: 1.4; padding: 10px;'>WhatsApp should have magically popped open. Just hit <b>Send</b> to lock in your answers! 💌</p><button class='btn btn-yellow' onclick='goTo(7, 1)' style='display:block; margin: 15px auto;'>🔄 Back to Start</button>";
+                });
+            }
+        });
+
+        function nextQ(current) {
+            const box = document.getElementById('q' + current);
+            const val = box.querySelector('textarea').value.trim();
+            if (!val) {
+                alert("Please write something Madam jiii! 😏");
+                return;
+            }
+            box.classList.remove('active-q');
+            document.getElementById('q' + (current + 1)).classList.add('active-q');
+        }
+
+        function goTo(curr, next) {
+            document.getElementById('step' + curr).classList.remove('active');
+            document.getElementById('step' + next).classList.add('active');
+        }
+
+        function setDark(on) {
+            if (on) document.getElementById('bodyTag').classList.add('room-dark');
+            else document.getElementById('bodyTag').classList.remove('room-dark');
+        }
+
+        function turnOnLights() {
+            setDark(false);
+            document.getElementById('lights').style.display = 'block';
+            setTimeout(() => goTo(2, 3), 1000);
+        }
+
+        function playMusic() {
+            const music = document.getElementById('bgMusic');
+            if (music) {
+                music.play().catch(e => console.log("Audio play failed:", e));
+            }
+        }
+
+        function releaseBalloons() {
+            for (let i = 0; i < 25; i++) {
+                let b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.left = Math.random() * 100 + 'vw';
+                b.style.background = `hsl(${Math.random() * 360}, 70%, 75%)`;
+                b.style.animationDelay = (Math.random() * 2) + 's';
+                document.body.appendChild(b);
+            }
+        }
+
+        const messages = [
+            "Happy Birthday Megha! 🎂", "You are my favorite person 💖", "Forever yours ✨",
+            "Keep shining, Madam Jiii 🌟", "My perfect chaos 💞", "The most beautiful soul 🌸",
+            "Grateful for every moment with you 🥰", "You deserve the world 🌎", "Love you loads! 💕",
+            "Stay amazing always 🌈", "Cheers to another year! 🥳", "You are magic ✨",
+            "Until I Found You... 🎶", "Best girl in the world 💎", "My everything 💗",
+            "Wishing you pure joy 🎈", "A special day for a special girl 🌹", "My happiness ☀️",
+            "Keep smiling, Megha! 😊", "To the moon and back 🌙"
+        ];
+
+        const container = document.getElementById('quoteList');
+        messages.forEach(m => {
+            let div = document.createElement('div');
+            div.className = 'q-card';
+            div.innerText = m;
+            container.appendChild(div);
+        });
+
+        const finalMsgHTML = `<p>I felt really happy when you were with me. You trusted me and shared your love matters with me—I truly like your character.</p><p>The way you even shared your personal and family photos means a lot to me. If you ever need any help, you can ask me anytime. Please see me as your best friend.</p><p>I really feel lucky to have friends like you, Anni, and Naaz 🎀 I’m truly blessed. I just want one promise from you—no matter the situation, don’t leave me. And don’t leave your friends either, because I’m really attached to my homies 🌸🫠😚</p><p style="text-align: center; margin: 15px 0;">✨ <b>On your special day…</b> ✨</p><p>May your life be filled with happiness, endless smiles, success, and all the love you deserve 💗</p><p>May all your dreams come true and your heart always stay as kind and beautiful as it is today 🌷</p><p>Keep shining, keep smiling, and keep being the amazing person you are 💫</p><p style="text-align: center; margin-top: 15px;">🎂 <b>Happy Birthday, my dear friend Megha Tikedar 🎀🌸💖✨</b><br>Wishing you a day full of love, laughter, surprises, and unforgettable memories 🥳💝</p>`;
+
+        let typeWriterTimeout;
+        function startTypewriter() {
+            clearTimeout(typeWriterTimeout);
+            const el = document.getElementById('typewriterText');
+            el.innerHTML = "";
+            let i = 0;
+            let isTag = false;
+
+            function type() {
+                if (i < finalMsgHTML.length) {
+                    el.innerHTML = finalMsgHTML.substring(0, i + 1) + '<span class="cursor-blink">|</span>';
+                    let char = finalMsgHTML.charAt(i);
+                    i++;
+                    if (char === '<') isTag = true;
+                    if (char === '>') isTag = false;
+
+                    if (isTag) {
+                        type();
+                    } else {
+                        typeWriterTimeout = setTimeout(type, 20);
+                        el.scrollTop = el.scrollHeight;
+                    }
+                } else {
+                    el.innerHTML = finalMsgHTML;
+                    document.getElementById('finishBtn').style.display = 'inline-block';
+                }
+            }
+            type();
+        }
+
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.innerHTML = ['💖', '✨', '🌸'][Math.floor(Math.random() * 3)];
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-5vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animation = `fall ${Math.random() * 3 + 4}s linear forwards`;
+            heart.style.opacity = Math.random() * 0.7 + 0.3;
+            heart.style.zIndex = '1';
+            heart.style.pointerEvents = 'none';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+        }, 800);
+    </script>
+</body>
+
+</html>
